@@ -37,6 +37,21 @@ app.get("/private", checkJwt, function (req, res) {
     message: "Hello from a private API!"
   });
 });
+function checkRole(role) {
+  return function (req, res, next) {
+    const assignedRoles = req.user["http://:localhost:3000/roles"];
+    if (Array.isArray(assignedRoles) && assignedRoles.includes(role)) {
+      return next();
+    } else {
+      return res.status(401).send("Insufficent role");
+    }
+  };
+}
+app.get("/admin", checkJwt, checkRole('admin'), function (req, res) {
+  res.json({
+    message: "Hello from a admin API!"
+  });
+});
 
 app.get("/course", checkJwt, checkScope(["read:courses"]), function (req, res) {
   res.json({
@@ -45,6 +60,7 @@ app.get("/course", checkJwt, checkScope(["read:courses"]), function (req, res) {
         {id:2, title:"Creating Reusable React Components"}
       ]
   });
+  
 });
 app.listen(3001);
 console.log("API server listening on " + process.env.REACT_APP_API_URL);
