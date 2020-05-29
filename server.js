@@ -11,9 +11,7 @@ const checkJwt = jwt({
     cache: true, // cache the signing key
     rateLimit: true,
     jwksRequestsPerMinute: 5, // prevent attackers from requesting more than 5 per minute
-    jwksUri: `https://${
-      process.env.REACT_APP_AUTH0_DOMAIN
-      }/.well-known/jwks.json`
+    jwksUri: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/.well-known/jwks.json`,
   }),
 
   // Validate the audience and the issuer.
@@ -21,20 +19,20 @@ const checkJwt = jwt({
   issuer: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/`,
 
   // This must match the algorithm selected in the Auth0 dashboard under your app's advanced settings under the OAuth tab
-  algorithms: ["RS256"]
+  algorithms: ["RS256"],
 });
 
 const app = express();
 
 app.get("/public", function (req, res) {
   res.json({
-    message: "Hello from a public API!"
+    message: "Hello from a public API!",
   });
 });
 
 app.get("/private", checkJwt, function (req, res) {
   res.json({
-    message: "Hello from a private API!"
+    message: "Hello from a private API!",
   });
 });
 
@@ -42,8 +40,8 @@ app.get("/course", checkJwt, checkScope(["read:courses"]), function (req, res) {
   res.json({
     courses: [
       { id: 1, title: "Building Apps with React and Redux" },
-      { id: 2, title: "Creating Reusable React Components" }
-    ]
+      { id: 2, title: "Creating Reusable React Components" },
+    ],
   });
 });
 
@@ -60,7 +58,7 @@ function checkRole(role) {
 
 app.get("/admin", checkJwt, checkRole("admin"), function (req, res) {
   res.json({
-    message: "Hello from an admin API!"
+    message: "Hello from an admin API!",
   });
 });
 

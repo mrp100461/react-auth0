@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+
 class Nav extends Component {
   render() {
-    const { isAuthenticated, login, logout,userHasScopes } = this.props.auth;
+    const { isAuthenticated , login, logout, userHasScopes } = this.props.auth;
     return (
       <nav>
         <ul>
@@ -15,14 +16,17 @@ class Nav extends Component {
           <li>
             <Link to="/public">Public</Link>
           </li>
-          {isAuthenticated() && userHasScopes(["read:courses"]) &&
-          <li>
-              <Link to="/private">Private</Link>
-          </li>}
-          {isAuthenticated() &&
+          {isAuthenticated() && (
             <li>
-              <Link to="/courses">Courses</Link>
-            </li>}
+              <Link to="/private">Private</Link>
+            </li>
+          )}
+          {isAuthenticated() &&
+            userHasScopes(["read:courses"]) && (
+              <li>
+                <Link to="/courses">Courses</Link>
+              </li>
+            )}
           <li>
             <button onClick={isAuthenticated() ? logout : login}>
               {isAuthenticated() ? "Log Out" : "Log In"}
@@ -33,4 +37,5 @@ class Nav extends Component {
     );
   }
 }
+
 export default Nav;
